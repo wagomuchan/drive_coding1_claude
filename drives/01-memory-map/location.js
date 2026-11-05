@@ -17,7 +17,12 @@ export function getGpsPosition() {
     }
     navigator.geolocation.getCurrentPosition(
       (pos) => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
-      (err) => reject(new LocationError(err.code === err.PERMISSION_DENIED ? 'denied' : 'unavailable')),
+      (err) =>
+        reject(
+          new LocationError(
+            err.code === err.PERMISSION_DENIED ? 'denied' : err.code === err.TIMEOUT ? 'timeout' : 'unavailable',
+          ),
+        ),
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 },
     );
   });

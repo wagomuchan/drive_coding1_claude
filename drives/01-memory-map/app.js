@@ -19,6 +19,7 @@ const els = {
   openForm: $('open-form'),
   form: $('post-form'),
   locationNote: $('location-note'),
+  locationHelp: $('location-help'),
   confirmLocation: $('confirm-location'),
   retryGps: $('retry-gps'),
   nickname: $('nickname'),
@@ -99,6 +100,14 @@ els.mapStatus.addEventListener('click', () => {
 let draft = null; // { lat, lng, source, confirmed }
 let draftMarker = null;
 let locateRequest = 0;
+let gpsFailReason = null; // 'denied' | 'timeout' | 'unavailable' | 'unsupported'
+
+const GPS_FAIL_TEXTS = {
+  denied: '位置情報の利用が許可されていないため、現在地を取得できませんでした。',
+  timeout: '現在地の取得に時間がかかりすぎたため、あきらめました。',
+  unavailable: '現在地を取得できませんでした。',
+  unsupported: 'このブラウザでは現在地を取得できません。',
+};
 
 const draftIcon = L.divIcon({
   className: 'draft-icon',
@@ -147,7 +156,7 @@ function renderLocationNote(message) {
     gps: '現在地を取得しました。違う場所なら、地図をタップするかピンを動かして直せます。',
     ip: draft.confirmed
       ? '場所を確認しました。違う場合は地図をタップして直せます。'
-      : '位置情報が使えなかったので、通信回線から大まかな場所を推測しました。地図の「だいたいこの辺？」が合っていれば「この場所でOK」を、違えば地図をタップして正しい場所を選んでください。（この位置はまだ保存されていません）',
+      : `${GPS_FAIL_TEXTS[gpsFailReason] || GPS_FAIL_TEXTS.unavailable}代わりに、通信回線から大まかな場所を推測しました。地図の「だいたいこの辺？」が合っていれば「この場所でOK」を、違えば地図をタップして正しい場所を選んでください。（この位置はまだ保存されていません）`,
     tap: '地図で選んだ場所にピンを立てました。もう一度タップすると選び直せます。',
   };
   els.locationNote.textContent = texts[draft.source] + coords;
@@ -156,6 +165,8 @@ function renderLocationNote(message) {
 async function locate() {
   const request = ++locateRequest;
   clearDraft();
+  gpsFailReason = null;
+  els.locationHelp.hidden = true;
   renderLocationNote('現在地を取得しています…');
   els.retryGps.disabled = true;
   try {
@@ -163,9 +174,11 @@ async function locate() {
     if (request !== locateRequest || draft) return; // 待っている間に地図をタップした
     setDraft(pos.lat, pos.lng, 'gps');
     map.setView([pos.lat, pos.lng], 15);
-  } catch {
+  } catch (err) {
     if (request !== locateRequest || draft) return;
-    renderLocationNote('位置情報が使えなかったので、通信回線から大まかな場所を調べています…');
+    gpsFailReason = err.code;
+    els.locationHelp.hidden = gpsFailReason !== 'denied';
+    renderLocationNote(`${GPS_FAIL_TEXTS[gpsFailReason] || GPS_FAIL_TEXTS.unavailable}通信回線から大まかな場所を調べています…`);
     const pos = await getIpPosition();
     if (request !== locateRequest || draft) return;
     if (pos) {

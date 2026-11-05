@@ -134,6 +134,33 @@
   font-size: 0.9rem;
 }
 
+.location-help {
+  margin: 0 0 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+.location-help summary {
+  color: var(--accent-strong);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.location-help p,
+.location-help ol {
+  margin: 8px 0 0;
+}
+
+.location-help ol {
+  padding-left: 1.4em;
+}
+
+.location-help-os {
+  font-weight: 700;
+}
+
 .location-actions {
   display: flex;
   flex-wrap: wrap;

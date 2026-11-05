@@ -36,6 +36,21 @@
         <div class="field">
           <span class="label">場所 <span class="tag tag-req">必須</span></span>
           <p id="location-note" class="location-note">現在地を取得しています…</p>
+          <details id="location-help" class="location-help" hidden>
+            <summary>許可したいのに、確認の画面が出なかったときは</summary>
+            <p>スマホの設定で位置情報が止まっていると、サイトからは何も聞かれずに断られます。</p>
+            <p class="location-help-os">iPhone（Safari）</p>
+            <ol>
+              <li>「設定」→「プライバシーとセキュリティ」→「位置情報サービス」をオンにする</li>
+              <li>同じ画面の下のほうにある「Safari Webサイト」を開いて、「次回または共有時に確認」か「このAppの使用中は許可」にする</li>
+              <li>Safariのアドレスバーの左のアイコン（「ぁあ」など）→「Webサイトの設定」→「位置情報」を「確認」か「許可」にする</li>
+            </ol>
+            <p class="location-help-os">Android（Chrome）</p>
+            <ol>
+              <li>アドレスバーの左のアイコン →「権限」→「位置情報」を許可する</li>
+            </ol>
+            <p>LINEなど、ほかのアプリの中でこのページを開いているときは、SafariやChromeで開き直してください。設定を変えたら、ページを読み込み直して「現在地をもう一度取得」を押してください。</p>
+          </details>
           <div class="location-actions">
             <button type="button" id="confirm-location" class="btn btn-primary" hidden>この場所でOK</button>
             <button type="button" id="retry-gps" class="btn">現在地をもう一度取得</button>
