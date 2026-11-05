@@ -14,7 +14,7 @@
 
 // ▼ ここに Apps Script のウェブアプリURL（最後が /exec のもの）を貼り付ける
 //   空のままだと「デモモード」になり、投稿はこのブラウザの中にだけ保存される
-const API_URL = '';
+const API_URL = 'https://script.google.com/macros/s/AKfycbxJF2hoHk5anCyNLr-WgAE_NUhp8EF3fWWUZbKE-RAbwGfGCd67_pIcis8oA9lO61lJrQ/exec';
 
 const REQUEST_TIMEOUT_MS = 20000;
 const CLIENT_ID_KEY = 'memoryMap.clientId';
