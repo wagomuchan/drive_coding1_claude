@@ -145,13 +145,19 @@
       <section class="card">
         <h2 class="section-title">みんなのマップ</h2>
         <p class="muted">
-          みんなが共有した思い出のうち、新しい100件を表示しています。ピンをタップすると、ニックネーム・行った日・メモが見られます。
+          みんなが共有した思い出のうち、新しい100件を表示しています。地図のピンをタップするか、下の「みんなの投稿」から見られます。
         </p>
         <p class="muted">自分の記録を載せたいときは、「自分の記録」で記録するときに「みんなのマップにも載せる」を選んでください。</p>
         <p id="demo-banner" class="demo-banner" hidden>
           デモモードで動いています。投稿はこのブラウザの中にだけ保存されます。
         </p>
         <button type="button" id="reload-posts" class="btn">読み込み直す</button>
+      </section>
+
+      <section class="card feed">
+        <h2 class="section-title">みんなの投稿 <span id="feed-count" class="count"></span></h2>
+        <p id="feed-empty" class="muted" hidden></p>
+        <ol id="feed-list" class="feed-list"></ol>
       </section>
     </section>
   </main>

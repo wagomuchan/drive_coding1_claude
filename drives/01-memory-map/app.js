@@ -59,6 +59,9 @@ const els = {
   homeTip: $('home-tip'),
   demoBanner: $('demo-banner'),
   reloadPosts: $('reload-posts'),
+  feedCount: $('feed-count'),
+  feedEmpty: $('feed-empty'),
+  feedList: $('feed-list'),
   toast: $('toast'),
 };
 
@@ -598,20 +601,64 @@ function postPopup(post) {
   return box;
 }
 
+// タイムラインの1件（Twitter のような並び）
+const AVATAR_COLORS = ['#d2562b', '#2f7d6d', '#3b6fb6', '#8a5cb8', '#c2861a', '#b8466e'];
+
+function feedItem(post, marker) {
+  const li = el('li', 'feed-item');
+  const button = el('button', 'feed-main');
+  button.type = 'button';
+
+  const nickname = post.nickname || '名無し';
+  const avatar = el('span', 'feed-avatar', Array.from(nickname)[0]);
+  avatar.style.background = AVATAR_COLORS[hashString(nickname) % AVATAR_COLORS.length];
+  avatar.setAttribute('aria-hidden', 'true');
+
+  const body = el('span', 'feed-body');
+  const head = el('span', 'feed-head');
+  const time = el('time', 'feed-time', relativeTime(post.postedAt));
+  time.dateTime = post.postedAt;
+  time.title = formatDateTime(post.postedAt);
+  head.append(el('span', 'feed-name', nickname), time);
+  body.append(head);
+  if (post.memo) body.append(el('span', 'feed-memo', post.memo));
+  body.append(el('span', 'feed-meta', `📍 ${formatDate(post.date)}に行った ・ 地図で見る`));
+
+  button.append(avatar, body);
+  button.addEventListener('click', () => {
+    els.mapWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    map.setView(marker.getLatLng(), Math.max(map.getZoom(), 13));
+    marker.openPopup();
+  });
+  li.append(button);
+  return li;
+}
+
 async function loadPosts() {
   setStatus('everyone', '読み込み中…');
   els.reloadPosts.disabled = true;
+  els.feedEmpty.textContent = '読み込み中…';
+  els.feedEmpty.hidden = !!posts.length;
   try {
     posts = await fetchRecentPosts();
+    postsLayer.eachLayer((m) => m.closePopup());
     postsLayer.clearLayers();
+    els.feedList.replaceChildren();
     for (const post of posts) {
-      postsLayer.addLayer(L.marker([post.lat, post.lng]).bindPopup(() => postPopup(post)));
+      const marker = L.marker([post.lat, post.lng]).bindPopup(() => postPopup(post));
+      postsLayer.addLayer(marker);
+      els.feedList.append(feedItem(post, marker));
     }
     postsLoaded = true;
     setStatus('everyone', posts.length ? `みんなの思い出 ${posts.length}件` : 'まだ誰も共有していません');
+    els.feedCount.textContent = posts.length ? `${posts.length}件` : '';
+    els.feedEmpty.textContent = 'まだ誰も共有していません。';
+    els.feedEmpty.hidden = posts.length > 0;
     if (currentTab === 'everyone') fitTo(posts.map((p) => [p.lat, p.lng]));
   } catch {
     setStatus('everyone', '読み込めませんでした（「読み込み直す」を押してください）', true);
+    els.feedEmpty.textContent = '投稿を読み込めませんでした。上の「読み込み直す」を押してください。';
+    els.feedEmpty.hidden = false;
   } finally {
     els.reloadPosts.disabled = false;
   }
@@ -636,6 +683,31 @@ function pad(n) {
 function todayString() {
   const d = new Date();
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
+// 「3分前」「5時間前」「2日前」。1週間より前は日付で出す
+function relativeTime(iso) {
+  const t = Date.parse(iso);
+  if (!Number.isFinite(t)) return '';
+  const diff = Math.max(0, Date.now() - t) / 1000;
+  if (diff < 60) return 'たった今';
+  if (diff < 3600) return `${Math.floor(diff / 60)}分前`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)}時間前`;
+  if (diff < 7 * 86400) return `${Math.floor(diff / 86400)}日前`;
+  const d = new Date(t);
+  return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
+}
+
+function formatDateTime(iso) {
+  const d = new Date(iso);
+  if (!Number.isFinite(d.getTime())) return '';
+  return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日 ${d.getHours()}:${pad(d.getMinutes())}`;
+}
+
+function hashString(s) {
+  let h = 0;
+  for (const ch of s) h = (h * 31 + ch.codePointAt(0)) >>> 0;
+  return h;
 }
 
 function formatDate(s) {
