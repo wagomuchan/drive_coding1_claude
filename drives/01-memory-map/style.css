@@ -1,0 +1,236 @@
+/* ドライブの思い出マップ専用の見た目 */
+
+.demo-banner {
+  max-width: 960px;
+  margin: 0 auto 12px;
+  padding: 8px 16px;
+  background: #fff4cc;
+  color: #6a5300;
+  font-size: 0.9rem;
+}
+
+.layout {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 16px 40px;
+  display: grid;
+  gap: 16px;
+}
+
+.map-wrap {
+  position: relative;
+}
+
+#map {
+  height: 55vh;
+  min-height: 320px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  z-index: 0;
+}
+
+.map-status {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  z-index: 500;
+  max-width: calc(100% - 24px);
+  padding: 4px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: var(--shadow);
+  font-size: 0.85rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.map-status.is-error {
+  color: var(--error);
+  cursor: pointer;
+}
+
+.panel {
+  scroll-margin-top: 12px;
+}
+
+.post-form {
+  padding: 16px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  scroll-margin-top: 12px;
+}
+
+.post-form h2 {
+  margin: 0 0 12px;
+  font-size: 1.15rem;
+}
+
+.field {
+  display: block;
+  margin-bottom: 16px;
+}
+
+.label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.tag {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: #ece8e1;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+.tag-req {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+.field input,
+.field textarea {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--text);
+  font: inherit;
+  font-size: 16px; /* iPhone で入力時に勝手にズームしないように */
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.counter {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-align: right;
+}
+
+.counter.is-over {
+  color: var(--error);
+  font-weight: 600;
+}
+
+.location-note {
+  margin: 0 0 8px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--bg);
+  font-size: 0.9rem;
+}
+
+.location-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.form-error {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fdecea;
+  color: var(--error);
+  font-size: 0.9rem;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.privacy-note {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+/* 投稿しようとしている場所のピン */
+.draft-icon {
+  background: none;
+  border: none;
+}
+
+.draft-pin {
+  width: 28px;
+  height: 28px;
+  border: 3px solid #fff;
+  border-radius: 50% 50% 50% 0;
+  background: var(--accent);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  transform: rotate(-45deg);
+}
+
+.draft-tooltip {
+  font-weight: 700;
+}
+
+/* ピンをタップしたときの吹き出し */
+.post-popup {
+  min-width: 140px;
+  max-width: 240px;
+}
+
+.post-popup-name {
+  display: block;
+  font-size: 1rem;
+}
+
+.post-popup-date {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.post-popup-memo {
+  margin: 6px 0 0 !important;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  z-index: 1000;
+  transform: translate(-50%, 20px);
+  padding: 10px 20px;
+  border-radius: 999px;
+  background: #2b2a28;
+  color: #fff;
+  font-weight: 600;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.toast.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+@media (min-width: 800px) {
+  .layout {
+    grid-template-columns: 1fr 340px;
+    align-items: start;
+  }
+
+  #map {
+    height: 70vh;
+  }
+}

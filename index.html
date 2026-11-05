@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>私のドライブコーディングサイト</title>
+  <meta name="description" content="ドライブするたびに、そのドライブ中に設計した機能を1つずつ付け足していくサイト。">
+  <link rel="stylesheet" href="assets/common.css">
+  <style>
+    .drive-list {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 8px 16px 40px;
+      list-style: none;
+      display: grid;
+      gap: 12px;
+    }
+
+    .drive-card {
+      display: block;
+      padding: 16px;
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .drive-card:hover {
+      outline: 2px solid var(--accent-soft);
+    }
+
+    .drive-no {
+      display: inline-block;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent-strong);
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .drive-date {
+      margin-left: 8px;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .drive-title {
+      margin: 6px 0 2px;
+      font-size: 1.15rem;
+    }
+
+    .drive-desc {
+      margin: 0;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <header class="page-header">
+    <h1>私のドライブコーディングサイト</h1>
+    <p class="lead">ドライブするたびに、そのドライブ中に設計した機能を1つずつ付け足していくサイトです。</p>
+  </header>
+
+  <!--
+    新しい回を追加するとき：
+      1. drives/ の中に「02-なにか」のようなフォルダを作って、その回のページを入れる
+      2. 下の <li> を1つコピーして一番上に貼り、番号・日付・タイトル・説明・リンク先を書き換える
+  -->
+  <ol class="drive-list" reversed>
+    <li>
+      <a class="drive-card" href="drives/01-memory-map/">
+        <span class="drive-no">第1回</span><span class="drive-date">2026年11月5日</span>
+        <h2 class="drive-title">ドライブの思い出マップ</h2>
+        <p class="drive-desc">誰でも「ここに行ったよ」と投稿できて、みんなの投稿が地図上のピンとして見えるマップ。</p>
+      </a>
+    </li>
+  </ol>
+</body>
+</html>
