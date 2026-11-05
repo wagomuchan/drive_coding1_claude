@@ -4,7 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ドライブの思い出マップ</title>
-  <meta name="description" content="誰でも「ここに行ったよ」と投稿できる、みんなのドライブの思い出マップ。">
+  <meta name="description" content="行った場所を記録して、あとで振り返れる地図。ついでに、みんなのマップに共有することもできます。">
+  <meta name="theme-color" content="#d2562b">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icon-180.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="思い出マップ">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
   <link rel="stylesheet" href="../../assets/common.css">
@@ -14,28 +19,30 @@
   <header class="page-header">
     <a class="back-link" href="../../">← トップへ</a>
     <h1>ドライブの思い出マップ</h1>
-    <p class="lead">「ここに行ったよ」を、みんなで地図に残そう。</p>
+    <p class="lead">行った場所を記録して、あとで振り返れる地図。ついでに、みんなのマップに共有することもできます。</p>
   </header>
 
-  <p id="demo-banner" class="demo-banner" hidden>
-    デモモードで動いています。投稿はこのブラウザの中にだけ保存されます。
-  </p>
+  <nav class="tabs" role="tablist" aria-label="表示の切り替え">
+    <button type="button" class="tab" id="tab-mine" role="tab" aria-selected="true" aria-controls="panel-mine">自分の記録</button>
+    <button type="button" class="tab" id="tab-everyone" role="tab" aria-selected="false" aria-controls="panel-everyone">みんなのマップ</button>
+  </nav>
 
   <main class="layout">
     <div class="map-wrap">
-      <div id="map" aria-label="みんなの思い出の地図"></div>
-      <div id="map-status" class="map-status" role="status">読み込み中…</div>
+      <div id="map" aria-label="地図"></div>
+      <div id="map-status" class="map-status" role="status"></div>
     </div>
 
-    <section class="panel">
-      <button type="button" id="open-form" class="btn btn-primary btn-block">📍 ここに行ったよ！を投稿する</button>
+    <!-- 自分の記録 -->
+    <section id="panel-mine" class="panel" role="tabpanel" aria-labelledby="tab-mine">
+      <button type="button" id="open-form" class="btn btn-primary btn-block">📍 行った場所を記録する</button>
 
-      <form id="post-form" class="post-form" hidden novalidate>
-        <h2>思い出を投稿</h2>
+      <form id="record-form" class="card record-form" hidden novalidate>
+        <h2 id="form-title">行った場所を記録</h2>
 
         <div class="field">
           <span class="label">場所 <span class="tag tag-req">必須</span></span>
-          <p id="location-note" class="location-note">現在地を取得しています…</p>
+          <p id="location-note" class="location-note"></p>
           <details id="location-help" class="location-help" hidden>
             <summary>許可したいのに、確認の画面が出なかったときは</summary>
             <p>スマホの設定で位置情報が止まっていると、サイトからは何も聞かれずに断られます。</p>
@@ -49,18 +56,18 @@
             <ol>
               <li>アドレスバーの左のアイコン →「権限」→「位置情報」を許可する</li>
             </ol>
-            <p>LINEなど、ほかのアプリの中でこのページを開いているときは、SafariやChromeで開き直してください。設定を変えたら、ページを読み込み直して「現在地をもう一度取得」を押してください。</p>
+            <p>LINEなど、ほかのアプリの中でこのページを開いているときは、SafariやChromeで開き直してください。設定を変えたら、ページを読み込み直して「現在地を取得」を押してください。</p>
           </details>
           <div class="location-actions">
             <button type="button" id="confirm-location" class="btn btn-primary" hidden>この場所でOK</button>
-            <button type="button" id="retry-gps" class="btn">現在地をもう一度取得</button>
+            <button type="button" id="retry-gps" class="btn">現在地を取得</button>
           </div>
         </div>
 
         <label class="field">
-          <span class="label">ニックネーム <span class="tag tag-req">必須</span></span>
-          <input id="nickname" type="text" autocomplete="nickname" enterkeyhint="next">
-          <span id="nickname-count" class="counter">0 / 20</span>
+          <span class="label">場所の名前 <span class="tag">任意</span></span>
+          <input id="place-name" type="text" placeholder="例：江の島" enterkeyhint="next">
+          <span id="place-name-count" class="counter"></span>
         </label>
 
         <label class="field">
@@ -69,22 +76,83 @@
         </label>
 
         <label class="field">
-          <span class="label">一言メモ <span class="tag">任意</span></span>
+          <span class="label">メモ <span class="tag">任意</span></span>
           <textarea id="memo" rows="3" placeholder="例：海がきれいだった！"></textarea>
-          <span id="memo-count" class="counter">0 / 100</span>
+          <span id="memo-count" class="counter"></span>
         </label>
+
+        <div id="share-box" class="share-box">
+          <label class="check">
+            <input id="share" type="checkbox">
+            <span>みんなのマップにも載せる</span>
+          </label>
+          <div id="share-fields" hidden>
+            <label class="field">
+              <span class="label">ニックネーム <span class="tag tag-req">必須</span></span>
+              <input id="nickname" type="text" autocomplete="nickname">
+              <span id="nickname-count" class="counter"></span>
+            </label>
+            <p class="share-note">
+              ニックネーム・場所・行った日・メモが、みんなのマップで誰でも見られるようになります。
+              場所は約100m単位に丸めて公開されます。場所の名前は公開されません。
+              一度載せた投稿は、自分では取り消せません。
+            </p>
+          </div>
+        </div>
+        <p id="shared-note" class="share-note" hidden>
+          この記録はみんなのマップに共有済みです。ここで直しても、共有した投稿は変わりません。
+        </p>
 
         <p id="form-error" class="form-error" role="alert" hidden></p>
 
         <div class="form-actions">
           <button type="button" id="cancel" class="btn">やめる</button>
-          <button type="submit" id="submit" class="btn btn-primary">投稿する</button>
+          <button type="submit" id="submit" class="btn btn-primary">記録する</button>
         </div>
-
-        <p class="privacy-note">
-          場所は約100m単位に丸めて保存されます。投稿したニックネーム・場所・日付・メモは誰でも見られます。
-        </p>
       </form>
+
+      <section class="card">
+        <h2 class="section-title">自分の記録 <span id="records-count" class="count"></span></h2>
+        <p id="records-empty" class="muted" hidden>まだ記録がありません。「行った場所を記録する」から、最初の1件をどうぞ。</p>
+        <ol id="records-list" class="records-list"></ol>
+      </section>
+
+      <section class="card backup">
+        <h2 class="section-title">バックアップ</h2>
+        <p class="muted">
+          自分の記録は、このブラウザの中にだけ保存されています。機種変更やブラウザのデータ消去で消えてしまうので、ときどき書き出しておいてください。
+        </p>
+        <div class="backup-actions">
+          <button type="button" id="export" class="btn">書き出す</button>
+          <button type="button" id="import" class="btn">読み込む</button>
+          <input id="import-file" type="file" accept="application/json,.json" hidden>
+        </div>
+        <div id="home-tip" class="home-tip">
+          <p class="home-tip-title">iPhoneの人は「ホーム画面に追加」がおすすめ</p>
+          <p>
+            iPhoneのSafariは、7日間開かなかったサイトのデータを消すことがあります。
+            Safariの共有ボタン（□に↑）→「ホーム画面に追加」で追加して、そのアイコンから開くと消されなくなります。
+          </p>
+          <p>
+            ホーム画面のアイコンから開いたときは、Safariとは別の保存場所になります。Safariで付けた記録は、ここで「書き出す」→ホーム画面のアイコンから開いて「読み込む」で移せます。
+          </p>
+        </div>
+      </section>
+    </section>
+
+    <!-- みんなのマップ -->
+    <section id="panel-everyone" class="panel" role="tabpanel" aria-labelledby="tab-everyone" hidden>
+      <section class="card">
+        <h2 class="section-title">みんなのマップ</h2>
+        <p class="muted">
+          みんなが共有した思い出のうち、新しい100件を表示しています。ピンをタップすると、ニックネーム・行った日・メモが見られます。
+        </p>
+        <p class="muted">自分の記録を載せたいときは、「自分の記録」で記録するときに「みんなのマップにも載せる」を選んでください。</p>
+        <p id="demo-banner" class="demo-banner" hidden>
+          デモモードで動いています。投稿はこのブラウザの中にだけ保存されます。
+        </p>
+        <button type="button" id="reload-posts" class="btn">読み込み直す</button>
+      </section>
     </section>
   </main>
 

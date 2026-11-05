@@ -1,14 +1,5 @@
 /* ドライブの思い出マップ専用の見た目 */
 
-.demo-banner {
-  max-width: 960px;
-  margin: 0 auto 12px;
-  padding: 8px 16px;
-  background: #fff4cc;
-  color: #6a5300;
-  font-size: 0.9rem;
-}
-
 .layout {
   max-width: 960px;
   margin: 0 auto;
@@ -48,24 +39,224 @@
 
 .map-status.is-error {
   color: var(--error);
+}
+
+.map-wrap {
+  scroll-margin-top: 8px;
+}
+
+/* タブ */
+.tabs {
+  max-width: 960px;
+  margin: 0 auto 12px;
+  padding: 0 16px;
+  display: flex;
+  gap: 8px;
+}
+
+.tab {
+  appearance: none;
+  flex: 1;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  font: inherit;
+  font-weight: 700;
   cursor: pointer;
 }
 
-.panel {
-  scroll-margin-top: 12px;
+.tab[aria-selected="true"] {
+  border-color: var(--text);
+  background: var(--text);
+  color: #fff;
 }
 
-.post-form {
+.panel {
+  display: grid;
+  gap: 16px;
+  align-content: start;
+}
+
+.card {
   padding: 16px;
   border-radius: var(--radius);
   background: var(--surface);
   box-shadow: var(--shadow);
-  scroll-margin-top: 12px;
 }
 
-.post-form h2 {
+.card h2,
+.section-title {
   margin: 0 0 12px;
   font-size: 1.15rem;
+}
+
+.count {
+  margin-left: 4px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.muted {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.demo-banner {
+  margin: 0 0 12px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: #fff4cc;
+  color: #6a5300;
+  font-size: 0.9rem;
+}
+
+.btn-small {
+  min-height: 36px;
+  padding: 4px 12px;
+  font-size: 0.85rem;
+}
+
+.btn-danger {
+  color: var(--error);
+}
+
+.badge {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: #e6f2ea;
+  color: #23633a;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+/* 自分の記録の一覧 */
+.records-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.record-item {
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+}
+
+.record-item:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.record-main {
+  appearance: none;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.record-date {
+  display: block;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.record-name {
+  display: block;
+  font-weight: 700;
+}
+
+.record-memo {
+  display: block;
+  font-size: 0.9rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.record-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+/* 共有のチェック */
+.share-box {
+  margin-bottom: 16px;
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--bg);
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.check input {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+#share-fields {
+  margin-top: 12px;
+}
+
+#share-fields .field {
+  margin-bottom: 8px;
+}
+
+.share-note {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+#share-fields .share-note {
+  margin: 0;
+}
+
+/* バックアップ */
+.backup-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.home-tip {
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--accent-soft);
+  font-size: 0.85rem;
+}
+
+.home-tip p {
+  margin: 0 0 6px;
+}
+
+.home-tip p:last-child {
+  margin-bottom: 0;
+}
+
+.home-tip-title {
+  font-weight: 700;
 }
 
 .field {
@@ -182,12 +373,6 @@
   gap: 8px;
 }
 
-.privacy-note {
-  margin: 12px 0 0;
-  color: var(--muted);
-  font-size: 0.8rem;
-}
-
 /* 投稿しようとしている場所のピン */
 .draft-icon {
   background: none;
@@ -257,7 +442,13 @@
     align-items: start;
   }
 
+  .map-wrap {
+    position: sticky;
+    top: 12px;
+  }
+
   #map {
-    height: 70vh;
+    height: calc(100vh - 40px);
+    max-height: 760px;
   }
 }

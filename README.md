@@ -19,9 +19,10 @@ assets/common.css     サイト共通の見た目
 drives/
   01-memory-map/      第1回：ドライブの思い出マップ
     index.html        ページ本体
-    app.js            地図と投稿フォームの動き
+    app.js            タブ・地図・記録フォーム・一覧・バックアップの動き
     location.js       現在地の取得（GPS → だめならIPから大まかに）
-    storage.js        データの保存・読み込み（ここだけが Apps Script とやりとりする）
+    storage.js        データの保存・読み込み（自分の記録＝ブラウザ内、みんなのマップ＝Apps Script）
+    manifest.webmanifest, icon-*.png  「ホーム画面に追加」用のアプリ情報とアイコン
     style.css         このページの見た目
     gas/Code.gs       Google Apps Script に貼り付けるサーバー側のコード
     SETUP.md          スプレッドシートと Apps Script の設定、公開の手順
