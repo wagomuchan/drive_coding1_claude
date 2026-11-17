@@ -9,6 +9,7 @@
 
 | 回 | 作ったもの | フォルダ |
 |---|---|---|
+| 第2回 | 支離滅裂おみくじ | [drives/02-omikuji/](drives/02-omikuji/)（公開手順：[SETUP.md](drives/02-omikuji/SETUP.md)） |
 | 第1回 | ドライブの思い出マップ | [drives/01-memory-map/](drives/01-memory-map/)（公開手順：[SETUP.md](drives/01-memory-map/SETUP.md)） |
 
 ## フォルダ構成
@@ -23,6 +24,15 @@ drives/
     location.js       現在地の取得（GPS → だめならIPから大まかに）
     storage.js        データの保存・読み込み（自分の記録＝ブラウザ内、みんなのマップ＝Apps Script）
     manifest.webmanifest, icon-*.png  「ホーム画面に追加」用のアプリ情報とアイコン
+    style.css         このページの見た目
+    gas/Code.gs       Google Apps Script に貼り付けるサーバー側のコード
+    SETUP.md          スプレッドシートと Apps Script の設定、公開の手順
+  02-omikuji/         第2回：支離滅裂おみくじ
+    index.html        ページ本体
+    app.js            おみくじを引く・結果・シェア・パーツ追加の動き
+    omikuji.js        運勢19個・最初のパーツ・確率の計算
+    weather.js        東京の今日の天気（Open-Meteo）
+    storage.js        保存・読み込み（今日の結果＝ブラウザ内、パーツ＝Apps Script）
     style.css         このページの見た目
     gas/Code.gs       Google Apps Script に貼り付けるサーバー側のコード
     SETUP.md          スプレッドシートと Apps Script の設定、公開の手順

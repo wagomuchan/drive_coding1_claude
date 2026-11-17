@@ -1,0 +1,563 @@
+/* 支離滅裂おみくじ */
+
+:root {
+  --shu: #c8372d;
+  --shu-dark: #9e2a22;
+  --shu-soft: #f6dcd5;
+  --washi: #f8f2e4;
+  --washi-deep: #efe4cc;
+  --sumi: #2a2320;
+  --kin: #b8902f;
+  --muted: #6e6255;
+  --mincho: "Zen Old Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--washi);
+  /* 和紙っぽいざらざら */
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.45 0 0 0 0 0.35 0 0 0 0 0.2 0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse 120% 60% at top, #fffaf0 0%, var(--washi) 100%);
+  background-repeat: repeat, no-repeat;
+  color: var(--sumi);
+}
+
+.shrine-header {
+  max-width: 560px;
+  text-align: center;
+  border-bottom: 6px double var(--shu);
+  padding-bottom: 14px;
+  margin-bottom: 16px;
+}
+
+.shrine-header .back-link {
+  display: block;
+  text-align: left;
+}
+
+.shrine-header h1 {
+  font-family: var(--mincho);
+  font-weight: 900;
+  font-size: 2rem;
+  letter-spacing: 0.08em;
+  color: var(--shu);
+}
+
+.shrine {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 0 16px 48px;
+  display: grid;
+  gap: 18px;
+}
+
+.shrine > * {
+  min-width: 0;
+}
+
+/* ボタン */
+.btn-shu {
+  border-color: var(--shu);
+  background: var(--shu);
+  color: #fff;
+}
+
+.btn-shu:hover {
+  border-color: var(--shu-dark);
+  background: var(--shu-dark);
+}
+
+.btn-big {
+  min-height: 56px;
+  padding: 10px 40px;
+  font-family: var(--mincho);
+  font-size: 1.25rem;
+  letter-spacing: 0.1em;
+  box-shadow: 0 4px 0 var(--shu-dark);
+}
+
+.btn-big:active:not(:disabled) {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--shu-dark);
+}
+
+.btn-small {
+  min-height: 36px;
+  padding: 4px 12px;
+  font-size: 0.85rem;
+}
+
+/* お知らせ札 */
+.notice {
+  position: relative;
+  padding: 14px 16px 12px;
+  border: 2px solid var(--sumi);
+  border-radius: 4px;
+  background: #fffdf6;
+  box-shadow: 4px 4px 0 rgba(42, 35, 32, 0.15);
+}
+
+.notice-title {
+  margin: 0 0 4px;
+  font-family: var(--mincho);
+  font-weight: 700;
+  color: var(--shu);
+}
+
+.notice-text {
+  margin: 0;
+  font-family: var(--mincho);
+  font-weight: 700;
+}
+
+.notice-bias {
+  display: flex;
+  height: 22px;
+  margin: 10px 0 0;
+  border-radius: 999px;
+  overflow: hidden;
+  font-size: 0.75rem;
+  line-height: 22px;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.notice-bias span {
+  overflow: hidden;
+  text-align: center;
+  text-overflow: clip;
+}
+
+.bias-kichi { background: var(--shu); }
+.bias-naka { background: #9a8f80; }
+.bias-kyou { background: #3d3a4a; }
+
+/* 箱 */
+.stage {
+  text-align: center;
+}
+
+.box-wrap {
+  height: 280px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.box {
+  position: relative;
+  width: 160px;
+  height: 220px;
+  transform-origin: 50% 70%;
+}
+
+.box svg {
+  position: relative;
+  display: block;
+  z-index: 1;
+}
+
+.box-label {
+  font-family: var(--mincho);
+  font-weight: 900;
+  font-size: 26px;
+  fill: #fff6e0;
+}
+
+.stick {
+  position: absolute;
+  left: 50%;
+  top: 22px;
+  width: 14px;
+  height: 90px;
+  margin-left: -7px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #e8cf9a, #f7e7c0, #d9bb7f);
+  box-shadow: 0 0 0 1px #a8834a;
+  opacity: 0;
+  z-index: 0;
+}
+
+.stick span {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--mincho);
+  font-size: 10px;
+  line-height: 1.1;
+  color: var(--shu);
+  writing-mode: vertical-rl;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.box.is-shaking {
+  animation: furi-furi 0.32s ease-in-out infinite alternate;
+}
+
+.box.is-out .stick {
+  animation: stick-out 0.5s ease-out forwards;
+}
+
+@keyframes furi-furi {
+  0% { transform: rotate(-16deg) translate(-8px, 0); }
+  50% { transform: rotate(4deg) translate(2px, -10px); }
+  100% { transform: rotate(16deg) translate(8px, 0); }
+}
+
+@keyframes stick-out {
+  0% { opacity: 1; transform: translateY(40px); }
+  100% { opacity: 1; transform: translateY(-62px); }
+}
+
+.stage-text {
+  min-height: 1.7em;
+  margin: 10px 0 14px;
+  font-family: var(--mincho);
+  font-weight: 700;
+  color: var(--muted);
+}
+
+/* 結果 */
+.result {
+  display: grid;
+  gap: 14px;
+}
+
+.slip {
+  position: relative;
+  padding: 22px 18px 18px;
+  border: 3px solid var(--shu);
+  outline: 1px solid var(--shu);
+  outline-offset: -9px;
+  background:
+    linear-gradient(rgba(255, 253, 246, 0.92), rgba(255, 253, 246, 0.92)),
+    var(--washi);
+  box-shadow: 0 10px 24px rgba(80, 40, 20, 0.18);
+  text-align: center;
+}
+
+.slip-head {
+  margin: 0 0 10px;
+  font-family: var(--mincho);
+  font-size: 0.85rem;
+  letter-spacing: 0.3em;
+  color: var(--shu);
+}
+
+.slip-label {
+  display: inline-block;
+  margin: 0;
+  padding: 0 12px;
+  border-radius: 2px;
+  background: var(--shu);
+  color: #fff;
+  font-family: var(--mincho);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.3em;
+}
+
+.fortune {
+  margin: 8px 0 4px;
+  font-family: var(--mincho);
+  font-weight: 900;
+  font-size: clamp(1.8rem, 9vw, 2.8rem);
+  line-height: 1.25;
+  color: var(--shu);
+  overflow-wrap: anywhere;
+}
+
+.fortune.is-kyou {
+  color: #3d3a4a;
+}
+
+.fortune.is-naka {
+  color: #7d6f5c;
+}
+
+.advice {
+  margin: 8px 0 0;
+  font-family: var(--mincho);
+  font-weight: 700;
+  font-size: 1.15rem;
+  line-height: 1.8;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.slip-line {
+  height: 1px;
+  margin: 14px 0;
+  background: repeating-linear-gradient(90deg, var(--shu) 0 6px, transparent 6px 10px);
+}
+
+.result-weather {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+  text-align: left;
+}
+
+.slip.is-deeen {
+  animation: deeen 0.6s cubic-bezier(0.2, 1.6, 0.4, 1) both;
+}
+
+.slip.is-deeen .fortune {
+  animation: deeen-text 0.7s 0.15s cubic-bezier(0.2, 1.8, 0.4, 1) both;
+}
+
+@keyframes deeen {
+  0% { opacity: 0; transform: scale(1.8) rotate(-4deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+@keyframes deeen-text {
+  0% { opacity: 0; transform: scale(2.6); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.share {
+  display: grid;
+  gap: 8px;
+}
+
+.share-links {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.share-links .btn {
+  text-decoration: none;
+}
+
+.done-note {
+  margin: 0;
+  text-align: center;
+  font-family: var(--mincho);
+  font-weight: 700;
+  color: var(--muted);
+}
+
+/* パーツ募集 */
+.btn-offer {
+  border: 2px dashed var(--kin);
+  background: #fffaf0;
+  font-family: var(--mincho);
+}
+
+.parts-form {
+  margin-top: 12px;
+  padding: 18px 16px;
+  border: 2px solid var(--kin);
+  border-radius: 6px;
+  background: #fffdf6;
+}
+
+.parts-form h2 {
+  margin: 0 0 6px;
+  font-family: var(--mincho);
+  font-size: 1.2rem;
+}
+
+.form-note {
+  margin: 0 0 12px;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.kinds {
+  margin: 0 0 12px;
+  padding: 0;
+  border: 0;
+}
+
+.kinds legend {
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.kind-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.kind-list label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.kind-list input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.kind-list input:checked + span {
+  color: #fff;
+}
+
+.kind-list label:has(input:checked) {
+  border-color: var(--shu);
+  background: var(--shu);
+}
+
+.kind-list label:has(input:focus-visible) {
+  outline: 3px solid #f0a58a;
+  outline-offset: 2px;
+}
+
+.field-label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 700;
+}
+
+.part-input {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.part-input input {
+  flex: 1;
+  min-width: 0;
+  min-height: 48px;
+  padding: 8px 12px;
+  border: 1px solid var(--muted);
+  border-radius: 8px;
+  background: #fff;
+  font: inherit;
+  font-size: 1.05rem;
+}
+
+.part-after {
+  flex: none;
+  font-family: var(--mincho);
+  font-weight: 900;
+  font-size: 1.2rem;
+  color: var(--shu);
+}
+
+.counter {
+  margin: 2px 0 0;
+  text-align: right;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.counter.is-over {
+  color: var(--error);
+  font-weight: 700;
+}
+
+.part-hint {
+  margin: 4px 0 0;
+  font-size: 0.85rem;
+  color: #8a5a00;
+}
+
+.preview {
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 6px;
+  background: var(--shu-soft);
+}
+
+.preview-label {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--shu-dark);
+}
+
+.preview-text {
+  margin: 4px 0 8px;
+  font-family: var(--mincho);
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.preview-text mark {
+  padding: 0 2px;
+  background: #fff;
+  color: var(--shu);
+}
+
+.part-error {
+  margin: 12px 0 0;
+  color: var(--error);
+  font-weight: 700;
+}
+
+.demo-note {
+  margin: 12px 0 0;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: #fff4c2;
+  font-size: 0.85rem;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  z-index: 10;
+  max-width: calc(100% - 32px);
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--sumi);
+  color: #fff;
+  font-weight: 700;
+  box-shadow: var(--shadow);
+}
+
+/* 動きを減らしたい人 */
+@media (prefers-reduced-motion: reduce) {
+  .box.is-shaking {
+    animation: furi-small 0.6s ease-in-out infinite alternate;
+  }
+
+  .box.is-out .stick {
+    animation: none;
+    opacity: 1;
+    transform: translateY(-62px);
+  }
+
+  .slip.is-deeen,
+  .slip.is-deeen .fortune {
+    animation: fade-in 0.3s ease-out both;
+  }
+
+  .btn-big:active:not(:disabled) {
+    transform: none;
+  }
+}
+
+@keyframes furi-small {
+  0% { transform: rotate(-3deg); }
+  100% { transform: rotate(3deg); }
+}
+
+@keyframes fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}

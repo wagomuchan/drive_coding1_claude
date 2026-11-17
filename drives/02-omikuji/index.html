@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>支離滅裂おみくじ</title>
+  <meta name="description" content="1日1回引ける、一言アドバイスが支離滅裂なおみくじ。おみくじに入る言葉は誰でも追加できる。">
+  <meta name="theme-color" content="#c8372d">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@700;900&display=swap">
+  <link rel="stylesheet" href="../../assets/common.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="page-header shrine-header">
+    <a class="back-link" href="../../">← トップへ</a>
+    <h1>支離滅裂おみくじ</h1>
+    <p class="lead">1日1回、引けます。一言アドバイスは、みんなが奉納した言葉でできています。</p>
+  </header>
+
+  <main class="shrine">
+    <!-- 天気のお知らせ -->
+    <section class="notice" aria-live="polite">
+      <p class="notice-title">本日のお知らせ</p>
+      <p id="weather-text" class="notice-text">東京の空模様を確かめています…</p>
+      <p id="weather-bias" class="notice-bias" hidden></p>
+    </section>
+
+    <!-- おみくじの箱 -->
+    <section id="stage" class="stage">
+      <div class="box-wrap">
+        <div id="box" class="box">
+          <div class="stick" aria-hidden="true"><span>御籤</span></div>
+          <svg viewBox="0 0 160 220" width="160" height="220" role="img" aria-label="おみくじの箱">
+            <defs>
+              <linearGradient id="wood" x1="0" x2="1">
+                <stop offset="0" stop-color="#8a5a2b"/>
+                <stop offset="0.25" stop-color="#c48a4f"/>
+                <stop offset="0.55" stop-color="#d9a466"/>
+                <stop offset="0.8" stop-color="#b47a41"/>
+                <stop offset="1" stop-color="#7a4d22"/>
+              </linearGradient>
+            </defs>
+            <ellipse cx="80" cy="212" rx="62" ry="6" fill="rgba(60,30,10,0.18)"/>
+            <path d="M22 26 L50 14 L110 14 L138 26 L138 198 L110 208 L50 208 L22 198 Z" fill="url(#wood)" stroke="#5c3816" stroke-width="2"/>
+            <path d="M50 14 L50 208 M110 14 L110 208" stroke="rgba(70,40,15,0.35)" stroke-width="1.5"/>
+            <path d="M22 26 L50 36 L110 36 L138 26" fill="none" stroke="#5c3816" stroke-width="2"/>
+            <path d="M22 26 L50 14 L110 14 L138 26 L110 36 L50 36 Z" fill="#a8723c" stroke="#5c3816" stroke-width="2"/>
+            <ellipse cx="80" cy="25" rx="7" ry="4" fill="#3a220c"/>
+            <rect x="58" y="62" width="44" height="118" rx="3" fill="#c8372d" stroke="#8f2018" stroke-width="2"/>
+            <rect x="63" y="67" width="34" height="108" rx="2" fill="none" stroke="#f3d9a4" stroke-width="1.2"/>
+            <text x="80" y="96" text-anchor="middle" class="box-label">御</text>
+            <text x="80" y="128" text-anchor="middle" class="box-label">神</text>
+            <text x="80" y="160" text-anchor="middle" class="box-label">籤</text>
+          </svg>
+        </div>
+      </div>
+      <p id="stage-text" class="stage-text">心を落ち着けて、箱をふってください。</p>
+      <button type="button" id="draw" class="btn btn-shu btn-big">おみくじを引く</button>
+    </section>
+
+    <!-- 結果 -->
+    <section id="result" class="result" hidden aria-live="polite">
+      <div class="slip">
+        <p class="slip-head">支離滅裂おみくじ</p>
+        <p class="slip-label">運勢</p>
+        <p id="fortune" class="fortune"></p>
+        <div class="slip-line" aria-hidden="true"></div>
+        <p class="slip-label">一言</p>
+        <p id="advice" class="advice"></p>
+        <div class="slip-line" aria-hidden="true"></div>
+        <p id="result-weather" class="result-weather"></p>
+      </div>
+
+      <div class="share">
+        <button type="button" id="share" class="btn btn-shu" hidden>結果をシェアする</button>
+        <div id="share-links" class="share-links" hidden>
+          <a id="share-x" class="btn" target="_blank" rel="noopener">X でシェア</a>
+          <a id="share-line" class="btn" target="_blank" rel="noopener">LINE で送る</a>
+        </div>
+      </div>
+
+      <button type="button" id="redraw" class="btn btn-block" hidden>気に入らないので引き直す（今日1回だけ）</button>
+      <p id="done-note" class="done-note" hidden>本日のおみくじはここまで。また明日お参りください。</p>
+    </section>
+
+    <!-- パーツ募集 -->
+    <section class="offer">
+      <button type="button" id="parts-open" class="btn btn-block btn-offer" aria-expanded="false" aria-controls="parts-form">📜 今日の一言のパーツ募集中</button>
+
+      <form id="parts-form" class="parts-form" hidden novalidate>
+        <h2>一言のパーツを奉納する</h2>
+        <p class="form-note">一言は「〈いつ〉に、〈どこ〉で、〈何をする〉と、〈どうなる〉。」の4つのパーツでできています。奉納した言葉は、すぐにみんなのおみくじに混ざります。</p>
+
+        <fieldset class="kinds">
+          <legend>どこに入れますか？</legend>
+          <div id="kind-list" class="kind-list"></div>
+        </fieldset>
+
+        <label class="field-label" for="part-text">言葉（15文字まで）</label>
+        <div class="part-input">
+          <input id="part-text" type="text" autocomplete="off" enterkeyhint="done">
+          <span id="part-after" class="part-after"></span>
+        </div>
+        <p class="counter"><span id="part-count">0</span> / 15</p>
+        <p id="part-hint" class="part-hint" hidden></p>
+
+        <div class="preview">
+          <p class="preview-label">こんな一言になるかも</p>
+          <p id="preview-text" class="preview-text"></p>
+          <button type="button" id="preview-reroll" class="btn btn-small">別の例</button>
+        </div>
+
+        <p id="part-error" class="part-error" role="alert" hidden></p>
+        <p id="demo-note" class="demo-note" hidden>いまはお試し中（デモモード）です。奉納した言葉はこのブラウザの中だけで使われます。</p>
+
+        <div class="form-actions">
+          <button type="button" id="parts-close" class="btn">閉じる</button>
+          <button type="submit" id="part-submit" class="btn btn-shu">奉納する</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" hidden></div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
