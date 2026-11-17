@@ -13,7 +13,7 @@
 
 // ▼ Apps Script のウェブアプリURL（最後が /exec）
 //   空だとデモモード（追加したパーツはこのブラウザの中だけ）
-const API_URL = '';
+const API_URL = 'https://script.google.com/macros/s/AKfycbzTpnsew8UPCp5THtCxWVMq9DXE1L5nr8mPcRSwUPS_Kyq_DlGIv7YTXjHVbZRLvYtJaw/exec';
 
 const REQUEST_TIMEOUT_MS = 8000;
 const COOLDOWN_MS = 60 * 1000;
