@@ -272,6 +272,18 @@ a {
   }
 }
 
+.all-count {
+  margin: 10px 0 0;
+  text-align: center;
+  font-family: var(--maru);
+  font-size: 0.95rem;
+}
+
+.all-count b {
+  font-size: 1.3rem;
+  color: var(--green-dark);
+}
+
 .pack-hint {
   margin: 8px 0 0;
   text-align: center;

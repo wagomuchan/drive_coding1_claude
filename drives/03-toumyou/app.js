@@ -32,6 +32,7 @@ const els = {
     retry: $('retry'),
     myMonth: $('my-month'),
     myTotal: $('my-total'),
+    allTotal: $('all-total'),
     mute: $('mute'),
     demoNote: $('demo-note'),
     champion: $('champion'),
@@ -469,6 +470,15 @@ function render_me()
     els.myTotal.textContent = total;
     els.meMonth.textContent = month;
     els.meTotal.textContent = total;
+
+    // みんなの累計 = 30マスの収穫された回数の合計
+    let all = pending;
+    for(const c of cells){
+        if(c){
+            all += c.n;
+        }
+    }
+    els.allTotal.textContent = all.toLocaleString('ja-JP');
     els.meName.textContent = my_name();
     const rank = serverMe ? serverMe.rank : 0;
     els.meRank.textContent = rank > 0 ? rank + '位' : '—';
