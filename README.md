@@ -42,6 +42,7 @@ drives/
     app.js            なぞって収穫・まとめて送る・10秒ごとの読み直し・ランキング・ニックネーム・シェア
     pack.js           豆苗パックの絵、なぞった線の当たり判定、収穫の演出
     sound.js          ブチッという音（Web Audio で作る）
+    vault.js          先月のチャンピオンだけに見える宝物庫の飾り（SVG）
     storage.js        保存・読み込み（畑とランキング＝Apps Script、名前と消音＝ブラウザ内）
     manifest.webmanifest, icon-*.png  「ホーム画面に追加」用のアプリ情報とアイコン
     style.css         このページの見た目

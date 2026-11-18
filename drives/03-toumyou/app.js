@@ -15,12 +15,17 @@ import {
 } from './storage.js';
 import { CELL_COUNT, initPack, setSprout, toSvgPoint, toWrapPoint, findHits, findNear, playCut, sparkleAt, startSparkle } from './pack.js';
 import { unlockAudio, playBuchi, setMuted } from './sound.js';
+import { showVault } from './vault.js';
 
 // なぞり終わり 最後になぞってからこれだけ待って送る
 const STROKE_END_MS = 1000;
 const POLL_MS = 10 * 1000;
 const MADA_GAP_MS = 1500;   //まだだよ 間引き
 const SITE_URL = 'https://wagomuchan.github.io/drive_coding1_claude/drives/03-toumyou/';
+// プレゼントのお知らせを出す月（サーバーの日付で判定）
+const PRESENT_MONTH = '2026-11';
+// ?vault=test →だれでも宝物庫 おためし
+const VAULT_TEST = new URLSearchParams(location.search).get('vault') == 'test';
 
 const $ = (id) => document.getElementById(id);
 const els = {
@@ -54,6 +59,11 @@ const els = {
     nameClose: $('name-close'),
     nameSubmit: $('name-submit'),
     toast: $('toast'),
+    vaultPlate: $('vault-plate'),
+    vaultTitle: $('vault-title'),
+    vaultSub: $('vault-sub'),
+    vaultTest: $('vault-test'),
+    presentNote: $('present-note'),
 };
 
 function is_reduced_motion()
@@ -110,6 +120,8 @@ function apply_view(view, mine, fresh)
             }
         }
         render_ranking(view.ranking, view.champion);
+        render_vault(view.vault, view.champion);
+        els.presentNote.hidden = view.monthKey != PRESENT_MONTH;
     }
     render_me();
     show_ticker(others);
@@ -514,6 +526,42 @@ function render_ranking(ranking, champion)
 }
 
 // ---------------------------------------------------------------
+// 先月のチャンピオンの宝物庫
+// ---------------------------------------------------------------
+
+function month_label(key)
+{
+    const m = /^(\d{4})-(\d{2})$/.exec(key || '');
+    if(!m){
+        return '';
+    }
+    return m[1] + '年' + Number(m[2]) + '月';
+}
+
+function render_vault(isChampion, champion)
+{
+    if(VAULT_TEST){
+        showVault(els.wrap, els.pack, true);
+        els.vaultTitle.textContent = '👑 おためし チャンピオンの宝物庫';
+        els.vaultSub.textContent = 'おためし表示です（優勝の証拠にはなりません）';
+        els.vaultPlate.classList.add('is-test');
+        els.vaultPlate.hidden = false;
+        els.vaultTest.hidden = false;
+        return;
+    }
+    const label = champion ? month_label(champion.month) : '';
+    if(isChampion && label){
+        showVault(els.wrap, els.pack, true);
+        els.vaultTitle.textContent = '👑 ' + label + ' チャンピオンの宝物庫';
+        els.vaultSub.textContent = my_name() + 'さん（' + champion.count + '本）';
+        els.vaultPlate.hidden = false;
+    }else{
+        showVault(els.wrap, els.pack, false);
+        els.vaultPlate.hidden = true;
+    }
+}
+
+// ---------------------------------------------------------------
 // シェア 02と同じ形
 // ---------------------------------------------------------------
 
@@ -663,6 +711,9 @@ startSparkle();
 render_mute();
 render_me();
 els.demoNote.hidden = !isDemoMode();
+if(VAULT_TEST){
+    render_vault(false, null);//読み込み前から出す
+}
 if(document.visibilityState == 'visible'){
     start_poll();
 }

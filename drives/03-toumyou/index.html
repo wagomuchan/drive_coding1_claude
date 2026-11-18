@@ -31,9 +31,15 @@
         <button type="button" id="mute" class="btn btn-icon" aria-pressed="false" aria-label="音を消す">🔊</button>
       </div>
 
+      <div id="vault-plate" class="vault-plate" hidden>
+        <p id="vault-title" class="vault-title"></p>
+        <p id="vault-sub" class="vault-sub"></p>
+      </div>
+
       <div id="pack-wrap" class="pack-wrap">
         <svg id="pack" class="pack" role="img" aria-label="豆苗のパック"></svg>
         <div id="ticker" class="ticker" aria-live="polite"></div>
+        <div id="vault-test" class="vault-test" hidden>おためし</div>
         <div id="pack-status" class="pack-status">
           <p id="pack-status-text">畑を見に行っています…</p>
           <button type="button" id="retry" class="btn" hidden>もう一度読み込む</button>
@@ -48,6 +54,7 @@
     <!-- ランキング -->
     <section class="ranking">
       <h2>今月の収穫ランキング</h2>
+      <p id="present-note" class="present-note" hidden>🎁 輪ゴムちゃんをリアルで知ってる人限定！ 2026年11月の1位になった人には、ちょっとしたプレゼントがあるよ</p>
       <p id="champion" class="champion" hidden></p>
       <ol id="rank-list" class="rank-list"></ol>
       <p id="rank-empty" class="rank-empty" hidden>今月はまだ誰も収穫していません。一番乗りのチャンス！</p>

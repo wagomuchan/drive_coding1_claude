@@ -16,6 +16,8 @@
 //   ranking:  [{ rank, name, month, me }]  今月のトップ10
 //   me:       { name, total, month, rank }  まだいなければ null
 //   champion: { month, name, count }  先月の1位 なければ null
+//   vault:    true なら自分が先月のチャンピオン（宝物庫）
+//   monthKey: サーバーの今月 '2026-11'
 // }
 // ============================================================
 
@@ -245,7 +247,14 @@ function clean_view(data)
     if(c && typeof c.name === 'string' && c.name !== ''){
         champion = { month: String(c.month || ''), name: c.name, count: to_int(c.count) };
     }
-    return { field: field, ranking: ranking, me: me, champion: champion };
+    return {
+        field: field,
+        ranking: ranking,
+        me: me,
+        champion: champion,
+        vault: data.vault === true,
+        monthKey: typeof data.monthKey === 'string' ? data.monthKey : '',
+    };
 }
 
 async function request(url, options)
@@ -359,6 +368,8 @@ function demo_view()
         ranking: me.month > 0 ? [{ rank: 1, name: name, month: me.month, me: true }] : [],
         me: { name: name, total: me.total || 0, month: me.month, rank: me.month > 0 ? 1 : 0 },
         champion: null,
+        vault: false,
+        monthKey: month_key(),//デモはスマホの時計で
     };
 }
 

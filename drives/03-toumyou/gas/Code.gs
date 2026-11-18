@@ -8,6 +8,8 @@
  *   POST action=harvest   まとめて収穫（1本ずつ早い者勝ち）
  *   POST action=rename    ニックネームを変える
  *
+ * 先月のチャンピオンのIDは「歴代チャンピオン」シートのD列にだけ置く
+ * 画面に返すのは「あなたは先月のチャンピオンか」（vault）だけ
  * 育ちきる時刻は画面に送らない。送るのは育ち具合（0〜10）と収穫できるかだけ
  */
 
@@ -28,7 +30,7 @@ const FIELD_HEADERS = ['マス', '収穫した時刻', '育ちきる時刻', '�
 const USER_SHEET = 'ユーザー';
 const USER_HEADERS = ['ID', 'ニックネーム', '累計', '今月の数', 'どの月の数か', '最後に収穫した時刻'];
 const CHAMP_SHEET = '歴代チャンピオン';
-const CHAMP_HEADERS = ['月', 'ニックネーム', '本数'];
+const CHAMP_HEADERS = ['月', 'ニックネーム', '本数', 'ID'];   // ID は同点なら , でつなぐ
 
 
 function doGet(e)
@@ -263,7 +265,16 @@ function buildView_(state, id, now)
         }
     }
 
-    return { field: field, ranking: ranking, me: me, champion: state.champion };
+    // ほかの人のIDは送らない
+    const champ = state.champion;
+    let champion = null;
+    let vault = false;
+    if (champ) {
+        champion = { month: champ.month, name: champ.name, count: champ.count };
+        vault = id !== '' && (champ.ids || []).indexOf(id) >= 0;
+    }
+
+    return { field: field, ranking: ranking, me: me, champion: champion, vault: vault, monthKey: state.monthKey };
 }
 
 // ------------------------------------------------------------
@@ -295,10 +306,14 @@ function checkMonth_(locked)
         }
         if (best > 0) {
             let names = [];
+            let ids = [];
             for (let i = 0; i < users.length; i++) {
-                if (users[i].monthKey === last && users[i].month === best) names.push(users[i].name);
+                if (users[i].monthKey === last && users[i].month === best) {
+                    names.push(users[i].name);
+                    ids.push(users[i].id);
+                }
             }
-            getSheet_(CHAMP_SHEET, CHAMP_HEADERS).appendRow([asText_(last), asText_(names.join('・')), best]);
+            getChampSheet_().appendRow([asText_(last), asText_(names.join('・')), best, asText_(ids.join(','))]);
         }
         props.setProperty('lastMonth', cm);
         CacheService.getScriptCache().remove('state');
@@ -310,16 +325,28 @@ function checkMonth_(locked)
 function readChampion_(cm)
 {
     const prev = prevMonth_(cm);
-    const sheet = getSheet_(CHAMP_SHEET, CHAMP_HEADERS);
+    const sheet = getChampSheet_();
     const lastRow = sheet.getLastRow();
     if (lastRow < 2) return null;
     const rows = sheet.getRange(2, 1, lastRow - 1, CHAMP_HEADERS.length).getValues();
     for (let i = rows.length - 1; i >= 0; i--) {
         if (toMonth_(rows[i][0]) === prev) {
-            return { month: prev, name: String(rows[i][1]), count: Number(rows[i][2]) || 0 };
+            const ids = String(rows[i][3]).split(',').map(function (x) { return x.trim(); }).filter(isId_);
+            return { month: prev, name: String(rows[i][1]), count: Number(rows[i][2]) || 0, ids: ids };
         }
     }
     return null;
+}
+
+// 前の版で作ったシートは ID の見出しがない→足す
+function getChampSheet_()
+{
+    const sheet = getSheet_(CHAMP_SHEET, CHAMP_HEADERS);
+    const head = sheet.getRange(1, 1, 1, CHAMP_HEADERS.length).getValues()[0];
+    if (String(head[3]) === '') {
+        sheet.getRange(1, 4).setValue(CHAMP_HEADERS[3]);
+    }
+    return sheet;
 }
 
 // ------------------------------------------------------------
