@@ -9,6 +9,7 @@
 
 | 回 | 作ったもの | フォルダ |
 |---|---|---|
+| 第3回 | 豆苗 | [drives/03-toumyou/](drives/03-toumyou/)（公開手順：[SETUP.md](drives/03-toumyou/SETUP.md)） |
 | 第2回 | 支離滅裂おみくじ | [drives/02-omikuji/](drives/02-omikuji/)（公開手順：[SETUP.md](drives/02-omikuji/SETUP.md)） |
 | 第1回 | ドライブの思い出マップ | [drives/01-memory-map/](drives/01-memory-map/)（公開手順：[SETUP.md](drives/01-memory-map/SETUP.md)） |
 
@@ -33,6 +34,16 @@ drives/
     omikuji.js        運勢19個・最初のパーツ・確率の計算
     weather.js        東京の今日の天気（Open-Meteo）
     storage.js        保存・読み込み（今日の結果＝ブラウザ内、パーツ＝Apps Script）
+    style.css         このページの見た目
+    gas/Code.gs       Google Apps Script に貼り付けるサーバー側のコード
+    SETUP.md          スプレッドシートと Apps Script の設定、公開の手順
+  03-toumyou/         第3回：豆苗
+    index.html        ページ本体
+    app.js            なぞって収穫・まとめて送る・10秒ごとの読み直し・ランキング・ニックネーム・シェア
+    pack.js           豆苗パックの絵、なぞった線の当たり判定、収穫の演出
+    sound.js          ブチッという音（Web Audio で作る）
+    storage.js        保存・読み込み（畑とランキング＝Apps Script、名前と消音＝ブラウザ内）
+    manifest.webmanifest, icon-*.png  「ホーム画面に追加」用のアプリ情報とアイコン
     style.css         このページの見た目
     gas/Code.gs       Google Apps Script に貼り付けるサーバー側のコード
     SETUP.md          スプレッドシートと Apps Script の設定、公開の手順

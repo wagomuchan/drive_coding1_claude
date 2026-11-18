@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>豆苗</title>
+  <meta name="description" content="みんなで1つの豆苗パックを取り合う。育った豆苗をなぞって収穫し、今月の収穫数で競う。">
+  <meta name="theme-color" content="#3f8a36">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icon-180.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="豆苗">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@700;900&display=swap">
+  <link rel="stylesheet" href="../../assets/common.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="page-header farm-header">
+    <a class="back-link" href="../../">← トップへ</a>
+    <h1>豆苗</h1>
+    <p class="lead">全国のみんなで、1つの豆苗パックを育てています。育ちきった豆苗を指でなぞると収穫できます。</p>
+  </header>
+
+  <main class="farm">
+    <!-- パック -->
+    <section class="pack-area">
+      <div class="pack-bar">
+        <p class="my-count">今月 <b id="my-month">0</b> 本<span class="my-total">累計 <span id="my-total">0</span> 本</span></p>
+        <button type="button" id="mute" class="btn btn-icon" aria-pressed="false" aria-label="音を消す">🔊</button>
+      </div>
+
+      <div id="pack-wrap" class="pack-wrap">
+        <svg id="pack" class="pack" role="img" aria-label="豆苗のパック"></svg>
+        <div id="ticker" class="ticker" aria-live="polite"></div>
+        <div id="pack-status" class="pack-status">
+          <p id="pack-status-text">畑を見に行っています…</p>
+          <button type="button" id="retry" class="btn" hidden>もう一度読み込む</button>
+        </div>
+      </div>
+
+      <p class="pack-hint">濃い緑に育った豆苗を、指でなぞって収穫しよう。</p>
+      <p id="demo-note" class="demo-note" hidden>いまはお試し中（デモモード）です。このブラウザの中だけで育ちます。</p>
+    </section>
+
+    <!-- ランキング -->
+    <section class="ranking">
+      <h2>今月の収穫ランキング</h2>
+      <p id="champion" class="champion" hidden></p>
+      <ol id="rank-list" class="rank-list"></ol>
+      <p id="rank-empty" class="rank-empty" hidden>今月はまだ誰も収穫していません。一番乗りのチャンス！</p>
+
+      <div class="me-box">
+        <p class="me-line"><span id="me-name" class="me-name"></span>さん</p>
+        <dl class="me-stats">
+          <div><dt>今月の順位</dt><dd id="me-rank">—</dd></div>
+          <div><dt>今月</dt><dd><span id="me-month">0</span>本</dd></div>
+          <div><dt>累計</dt><dd><span id="me-total">0</span>本</dd></div>
+        </dl>
+
+        <div class="share">
+          <button type="button" id="share" class="btn btn-green" hidden>今月の収穫をシェアする</button>
+          <div id="share-links" class="share-links" hidden>
+            <a id="share-x" class="btn" target="_blank" rel="noopener">X でシェア</a>
+            <a id="share-line" class="btn" target="_blank" rel="noopener">LINE で送る</a>
+          </div>
+        </div>
+
+        <button type="button" id="name-open" class="btn btn-small" aria-expanded="false" aria-controls="name-form">ニックネームを変える</button>
+        <form id="name-form" class="name-form" hidden novalidate>
+          <label class="field-label" for="name-input">ニックネーム（12文字まで）</label>
+          <input id="name-input" type="text" autocomplete="off" enterkeyhint="done">
+          <p class="counter"><span id="name-count">0</span> / 12</p>
+          <p id="name-error" class="name-error" role="alert" hidden></p>
+          <div class="form-actions">
+            <button type="button" id="name-close" class="btn">やめる</button>
+            <button type="submit" id="name-submit" class="btn btn-green">変える</button>
+          </div>
+        </form>
+      </div>
+
+      <p class="rank-note">ランキングは毎月1日の0時（日本時間）にリセットされます。累計はずっと残ります。</p>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" hidden></div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

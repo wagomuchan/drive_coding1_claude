@@ -1,0 +1,520 @@
+/* 豆苗 */
+
+:root {
+  --green: #3f8a36;
+  --green-dark: #2e6b27;
+  --green-soft: #e4f1d6;
+  --sprout: #8cc04a;
+  --cream: #fbf8ec;
+  --muted: #66705c;
+  --maru: "Zen Maru Gothic", "Hiragino Maru Gothic ProN", system-ui, sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse 120% 50% at top, #ffffff 0%, rgba(255, 255, 255, 0) 70%),
+    linear-gradient(#f6f8ec, #eef2df);
+  color: #2b3226;
+}
+
+a {
+  color: var(--green-dark);
+}
+
+.farm-header {
+  max-width: 560px;
+  text-align: center;
+  padding-bottom: 4px;
+}
+
+.farm-header .back-link {
+  display: block;
+  text-align: left;
+}
+
+.farm-header h1 {
+  font-family: var(--maru);
+  font-weight: 900;
+  font-size: 2.4rem;
+  letter-spacing: 0.2em;
+  color: var(--green-dark);
+}
+
+.farm-header .lead {
+  font-size: 0.9rem;
+}
+
+.farm {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 0 16px 48px;
+}
+
+/* ---------- パック ---------- */
+
+.pack-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 4px 0;
+}
+
+.my-count {
+  margin: 0;
+  font-family: var(--maru);
+  font-size: 1rem;
+}
+
+.my-count b {
+  display: inline-block;
+  min-width: 1.2em;
+  font-size: 1.6rem;
+  color: var(--green-dark);
+  text-align: center;
+}
+
+.my-total {
+  margin-left: 12px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.btn-icon {
+  min-width: 44px;
+  padding: 6px 10px;
+  font-size: 1.15rem;
+}
+
+.pack-wrap {
+  position: relative;
+  /* なぞってる間スクロールしない */
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  border-radius: 20px;
+  background: linear-gradient(#fdfdf7, #f3f4e4 70%, #e8e6cf);
+  box-shadow: inset 0 0 0 1px rgba(80, 100, 60, 0.08), 0 2px 10px rgba(60, 80, 40, 0.08);
+  overflow: hidden;
+  cursor: crosshair;
+}
+
+.pack {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 360 / 470;
+}
+
+.pack .label text {
+  font-family: var(--maru);
+  font-weight: 900;
+  font-size: 20px;
+  letter-spacing: 3px;
+  fill: #ffffff;
+}
+
+.pack .root {
+  fill: none;
+  stroke: rgba(255, 252, 238, 0.95);
+  stroke-width: 1.3;
+}
+
+.pack .bean {
+  fill: #ece3b0;
+  stroke: #c8bb7f;
+  stroke-width: 1;
+}
+
+.sprout .stem {
+  fill: none;
+  stroke: var(--stem);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+}
+
+.sprout.is-ready .stem {
+  stroke-width: 3.2;
+}
+
+.sprout .leaf {
+  fill: var(--leaf);
+}
+
+.sprout .tendril {
+  display: none;
+  fill: none;
+  stroke: var(--leaf);
+  stroke-width: 1.1;
+  stroke-linecap: round;
+}
+
+.sprout.is-ready .tendril {
+  display: inline;
+}
+
+.sprout .tip {
+  display: none;
+  fill: #f7f3d4;
+  stroke: #b9c27a;
+  stroke-width: 0.8;
+}
+
+.sprout.is-stump .top {
+  display: none;
+}
+
+.sprout.is-stump .tip {
+  display: inline;
+}
+
+.pack .bit {
+  fill: #3b8a37;
+}
+
+.pack .sparkle {
+  fill: #fffbe0;
+  stroke: #e9d36a;
+  stroke-width: 0.6;
+  transform-box: view-box;
+  transform-origin: 0 0;
+  pointer-events: none;
+}
+
+.pack-status {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  gap: 10px;
+  padding: 16px;
+  text-align: center;
+  background: rgba(250, 251, 242, 0.82);
+  color: var(--muted);
+}
+
+.pack-status p {
+  margin: 0;
+}
+
+.plus {
+  position: absolute;
+  pointer-events: none;
+  font-family: var(--maru);
+  font-weight: 900;
+  font-size: 1.15rem;
+  color: var(--green-dark);
+  text-shadow: 0 1px 0 #fff, 0 0 6px rgba(255, 255, 255, 0.9);
+  transform: translate(-50%, -50%);
+}
+
+.bubble {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+  font-size: 0.8rem;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+
+.bubble.is-show {
+  opacity: 1;
+}
+
+.ticker {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: grid;
+  justify-items: end;
+  gap: 4px;
+  max-width: 75%;
+  pointer-events: none;
+}
+
+.ticker-item {
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: rgba(46, 107, 39, 0.82);
+  color: #fff;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  animation: ticker-in 0.4s ease-out;
+  transition: opacity 0.5s, transform 0.5s;
+}
+
+.ticker-item.is-out {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+@keyframes ticker-in {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.pack-hint {
+  margin: 8px 0 0;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.demo-note {
+  margin: 10px 0 0;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: #fff4c2;
+  font-size: 0.85rem;
+}
+
+/* ---------- ランキング ---------- */
+
+.ranking {
+  margin-top: 24px;
+  padding: 16px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.ranking h2 {
+  margin: 0 0 8px;
+  font-family: var(--maru);
+  font-size: 1.15rem;
+  color: var(--green-dark);
+}
+
+.champion {
+  margin: 0 0 8px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #fbf3d2;
+  font-size: 0.8rem;
+  color: #6b5a1b;
+}
+
+.rank-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rank-item {
+  display: grid;
+  grid-template-columns: 2em 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 4px;
+  border-bottom: 1px solid var(--line);
+}
+
+.rank-item:last-child {
+  border-bottom: none;
+}
+
+.rank-no {
+  font-family: var(--maru);
+  font-weight: 900;
+  text-align: center;
+  color: var(--muted);
+}
+
+.rank-item.is-top1 .rank-no {
+  color: #c79a1c;
+}
+
+.rank-item.is-top2 .rank-no {
+  color: #8d96a0;
+}
+
+.rank-item.is-top3 .rank-no {
+  color: #b0703a;
+}
+
+.rank-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rank-count {
+  font-weight: 700;
+}
+
+.rank-item.is-me {
+  border-radius: 8px;
+  background: var(--green-soft);
+}
+
+.rank-empty {
+  margin: 4px 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.me-box {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 2px dashed var(--line);
+}
+
+.me-line {
+  margin: 0;
+}
+
+.me-name {
+  font-weight: 700;
+}
+
+.me-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 0;
+}
+
+.me-stats div {
+  padding: 6px;
+  border-radius: 8px;
+  background: var(--cream);
+  text-align: center;
+}
+
+.me-stats dt {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.me-stats dd {
+  margin: 0;
+  font-family: var(--maru);
+  font-weight: 900;
+  font-size: 1.2rem;
+}
+
+.share {
+  display: grid;
+  gap: 8px;
+}
+
+.share-links {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.share-links .btn {
+  text-decoration: none;
+}
+
+.btn-green {
+  border-color: var(--green);
+  background: var(--green);
+  color: #fff;
+}
+
+.btn-green:hover {
+  border-color: var(--green-dark);
+  background: var(--green-dark);
+}
+
+.btn-small {
+  justify-self: start;
+  min-height: 36px;
+  padding: 4px 14px;
+  font-size: 0.85rem;
+}
+
+.name-form {
+  display: grid;
+  gap: 6px;
+}
+
+.field-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.name-form input {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font: inherit;
+  font-size: 16px;
+}
+
+.counter {
+  margin: 0;
+  text-align: right;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.counter.is-over {
+  color: var(--error);
+  font-weight: 700;
+}
+
+.name-error {
+  margin: 0;
+  color: var(--error);
+  font-size: 0.85rem;
+}
+
+.form-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.rank-note {
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  z-index: 10;
+  max-width: calc(100% - 32px);
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: rgba(35, 50, 30, 0.92);
+  color: #fff;
+  font-size: 0.9rem;
+  text-align: center;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker-item {
+    animation: none;
+  }
+}
