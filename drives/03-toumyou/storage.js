@@ -21,7 +21,7 @@
 
 // ▼ Apps Script のウェブアプリURL（最後が /exec）
 //   空だとデモモード（このブラウザの中だけで育つ）
-const API_URL = '';
+const API_URL = 'https://script.google.com/macros/s/AKfycbzvdE8gsp7FEGgM4uFi0tcLtpq-MGsbMwGpil66NyWitEd2Utl1SCnimuw1Q1upLNBgcg/exec';
 
 // デモの育つ時間 本番のは gas/Code.gs の先頭
 const DEMO_GROW_MIN_MS = 1 * 60 * 1000;
